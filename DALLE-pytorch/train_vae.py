@@ -295,12 +295,12 @@ for epoch in range(EPOCHS):
             wandb.log(logs)
         global_step += 1
 
-    if distr_backend.is_root_worker():
-        # save trained model to wandb as an artifact every epoch's end
+    # if distr_backend.is_root_worker():
+    #     # save trained model to wandb as an artifact every epoch's end
 
-        model_artifact = wandb.Artifact('trained-vae', type = 'model', metadata = dict(model_config))
-        model_artifact.add_file('vae.pt')
-        run.log_artifact(model_artifact)
+    #     model_artifact = wandb.Artifact('trained-vae', type = 'model', metadata = dict(model_config))
+    #     model_artifact.add_file('vae.pt')
+    #     run.log_artifact(model_artifact)
 
 if distr_backend.is_root_worker():
     # save final vae and cleanup
@@ -308,8 +308,8 @@ if distr_backend.is_root_worker():
     save_model('./vae-final.pt')
     # wandb.save('./vae-final.pt')
 
-    model_artifact = wandb.Artifact('trained-vae', type = 'model', metadata = dict(model_config))
-    model_artifact.add_file('vae-final.pt')
-    run.log_artifact(model_artifact)
+    # model_artifact = wandb.Artifact('trained-vae', type = 'model', metadata = dict(model_config))
+    # model_artifact.add_file('vae-final.pt')
+    # run.log_artifact(model_artifact)
 
     wandb.finish()
