@@ -13,6 +13,17 @@ from dataset import build_moco_dataset
 from utils.config import cfg_from_yaml_file, cfg
 from transformers import AutoTokenizer
 
+'''
+Usage: python clip_sort.py [text] [img_num] [save_path]
+'''
+if len(sys.argv) == 4:
+    text = sys.argv[1]
+    img_num = int(sys.argv[2])
+    save_path = sys.argv[3]
+else:
+    print('Usage: python clip_sort.py [text] [img_num] [save_path]')
+    exit(1)
+
 
 load_checkpoint = '/home/yjw/ZYJ_WorkSpace/BriVL-1.0/BriVL-pretrain-model/BriVL-1.0-5500w.pth'
 cfg_from_yaml_file('/home/yjw/ZYJ_WorkSpace/BriVL-1.0/BriVL-code-inference/cfg/test_xyb.yml', cfg)
@@ -31,9 +42,9 @@ class CLIP_DATA(data.Dataset):
     def __init__(self):
         self.imgnames = []
         self.sentences = []
-        for i in range(128):
-            self.imgnames.append(f'./gen_imgs/{i}.jpg')
-            self.sentences.append('这一碗红烧牛肉面的肉好多，是真的好吃')
+        for i in range(img_num):
+            self.imgnames.append(os.path.join(save_path, f'{i}.jpg'))
+            self.sentences.append(text)
         # for i in range(10):
         #     self.imgnames.append(f'./gen_test/{i}.jpg')
         #     self.sentences.append('乞讨小女孩好可怜')
@@ -55,11 +66,6 @@ class CLIP_DATA(data.Dataset):
         image = Image.open(img_path).convert('RGB')
         
         img_box_s = []
-        width, height = image.size
-        # box_grid = self.cfg.MODEL.BOX_GRID
-        # for box_i in self.bboxs[index]: # bbox number:  self.cfg.MODEL.MAX_IMG_LEN-1
-        #     x1, y1, x2, y2 = box_i[0] * (new_size/width), box_i[1] * (new_size/height), box_i[2] * (new_size/width), box_i[3] * (new_size/height)
-        #     img_box_s.append(torch.from_numpy(np.array([x1, y1, x2, y2]).astype(np.float32)))   
         img_box_s.append(torch.from_numpy(np.array([0, 0, new_size, new_size]).astype(np.float32))) # bbox number:  self.cfg.MODEL.MAX_IMG_LEN
         
         valid_len = len(img_box_s)
@@ -150,9 +156,4 @@ GT_label = torch.arange(0, N).view(N, 1).cuda()
 logits = scores.T
 indices = torch.argsort(logits, descending=True) # dim=-1  <N, N>
 print('#'*10, indices[0].cpu().numpy())
-# gt_rank = (indices == GT_label).float() 
-# gt_rank = gt_rank.cumsum(dim=1) # 按列累加
-# gt_rank_t2i = gt_rank.cpu().numpy()
-# for recall_k in recall_k_s:
-#     recall = 100 * (np.sum(gt_rank_t2i[:, recall_k - 1]) / N)
-#     print('Recall@{:d}:  {:.2f}%'.format(recall_k, recall))
+

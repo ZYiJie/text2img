@@ -1,5 +1,5 @@
 from pathlib import Path
-import os
+import sys, os
 import torch
 from dalle_pytorch import OpenAIDiscreteVAE, VQGanVAE, DiscreteVAE, DALLE
 from dalle_pytorch.tokenizer import tokenizer, ChineseTokenizer
@@ -7,6 +7,16 @@ from dalle_pytorch.tokenizer import tokenizer, ChineseTokenizer
 from torchvision.utils import make_grid, save_image
 from PIL import Image
 
+'''
+Usage: python dalle_gen.py [text] [img_num] [save_path]
+'''
+if len(sys.argv) == 4:
+    text = sys.argv[1]
+    img_num = int(sys.argv[2])
+    save_path = sys.argv[3]
+else:
+    print('Usage: python dalle_gen.py [text] [img_num] [save_path]')
+    exit(1)
 
 
 def exists(val):
@@ -51,12 +61,14 @@ dalle = dalle.cuda()
 dalle.load_state_dict(weights)
 
 
-sample = '这一碗红烧牛肉面的肉好多，是真的好吃'
+
+
+sample = text
 tokenizer = ChineseTokenizer()
 mysample = tokenizer.tokenize(sample,32,truncate_text=None).cuda()
 
-for i in range(128):
+for i in range(img_num):
     images = dalle.generate_images(mysample, filter_thres=0.9)  # topk sampling at 0.9
-    save_image(images[0], f'./gen_imgs/{i}.jpg', normalize=True)
+    save_image(images[0], os.path.join(save_path, f'{i}.jpg'), normalize=True)
 
 
