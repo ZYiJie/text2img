@@ -98,6 +98,65 @@
     save_path：图像保存地址
   ```
 
+### 实验过程
+
+> 下面所给图像均是截图，非原始生成图像
+
+#### **数据预测处理**
+
+数据集：WuKong 华为诺亚开源的中文图文数据集，其中包含一亿个来自网络的中文图文对。
+
+出于训练收敛速度的考虑，我们限定了本实验所用的图片域，通过词表筛选图像caption中的关键词，挑选出食物相关的图片。此外，过滤caption长度大于32、包含特殊特殊字符的caption、image宽高比大于3以及image size过小的数据样本。
+
+最终从WuKong数据集的前十个文件中（10/255，合计3.9M图文对）清洗得到51k样本；按9:1划分train-validation dataset，如下表：
+
+| Type  | Size  |
+| ----- | ----- |
+| train | 45975 |
+| val   | 5112  |
+
+所得数据图文相关性整体较强，但图片范围不仅限于食物题材（如下右一图）。
+
+![](img/1.png)
+
+#### **实验一：VQVAE+DALLE模型训练**
+
+1. VQVAE训练结果
+
+- Train on V100, 40min, resolution=128
+![](img/2.png)
+
+- Train on V100, 36min, resolution=256
+![](img/3.png)
+
+2. 基于VQVAE的DALLE模型训练结果
+   
+![](img/4.png)
+左边两张图为训练过程中原图以及基于图像caption的生成结果；右图为基于文本输入的生成结果。
+
+#### **实验二：开源VQGAN+DALLE模型训练**
+
+训练结果
+
+Train on V100, 25.37h, resolution=256（train没有完全收敛）
+
+![训练过程](img/5.png)
+
+![基于文本输入的生成结果](img/6.png)
+
+#### **实验三：VQGAN+DALLE+BriVL**
+
+输入文本：这一碗红烧牛肉面的肉好多，是真的好吃
+
+- VQGAN+DALLE  Random 4
+
+![](img/7.png)
+
+- VQGAN+DALLE+BriVL  Top 4
+
+![](img/8.png)
+
+
 ### 相关资源
 
 - wukong数据集：https://wukong-dataset.github.io/wukong-dataset/benchmark.html
