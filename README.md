@@ -130,16 +130,16 @@
 ![](img/3.png)
 
 2. 基于VQVAE的DALLE模型训练结果
-   
+- 左边两张图为训练过程中原图以及基于图像caption的生成结果；右图为基于文本输入的生成结果
 ![](img/4.png)
 
-左边两张图为训练过程中原图以及基于图像caption的生成结果；右图为基于文本输入的生成结果。
+
 
 #### **实验二：开源VQGAN+DALLE模型训练**
 
 训练结果
 
-Train on V100, 25.37h, resolution=256（train没有完全收敛）
+Train on V100, 25.37h, resolution=256（train loss未完全收敛）
 
 ![训练过程](img/5.png)
 
