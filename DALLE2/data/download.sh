@@ -1,0 +1,9 @@
+img2dataset --url_list=food.tsv \
+--output_folder=imgs \
+--processes_count=16 \
+--thread_count=32 \
+--image_size=256 \
+--timeout=4 \
+--input_format=tsv \
+--caption_col=caption \
+--output_format=webdataset
