@@ -236,7 +236,7 @@ class BaseClipAdapter(nn.Module):
 class HuggingfaceAdapter(BaseClipAdapter):
     def __init__(
         self,
-        text_encoder_name = 'IDEA-CCNL/Taiyi-CLIP-RoBERTa-102M-ViT-L-Chinese',
+        text_encoder_name = 'IDEA-CCNL/Taiyi-CLIP-Roberta-large-326M-Chinese',
         img_encoder_name = 'openai/clip-vit-large-patch14',
         max_text_len = 32
     ):
