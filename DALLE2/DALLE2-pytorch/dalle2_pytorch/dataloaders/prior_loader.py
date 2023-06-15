@@ -1,7 +1,6 @@
 from math import ceil
 # from clip import tokenize
 from transformers import BertTokenizer
-tokenizer = BertTokenizer.from_pretrained("IDEA-CCNL/Taiyi-CLIP-RoBERTa-102M-ViT-L-Chinese")
 from embedding_reader import EmbeddingReader
 from torch import from_numpy
 from torch.utils.data import IterableDataset, DataLoader

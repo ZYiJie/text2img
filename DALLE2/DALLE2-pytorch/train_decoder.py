@@ -315,7 +315,7 @@ def train(
     # Set up starting model and parameters based on a recalled state dict
     start_epoch = 0
     validation_losses = []
-    next_task = 'val'
+    next_task = 'train'
     sample = 0
     samples_seen = 0
     val_sample = 0

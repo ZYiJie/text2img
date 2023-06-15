@@ -99,6 +99,7 @@ class WandbLogger(BaseLogger):
         wandb_project: str,
         wandb_run_id: Optional[str] = None,
         wandb_run_name: Optional[str] = None,
+        key: Optional[str] = None,
         **kwargs
     ):
         super().__init__(data_path, **kwargs)
@@ -106,6 +107,7 @@ class WandbLogger(BaseLogger):
         self.project = wandb_project
         self.run_id = wandb_run_id
         self.run_name = wandb_run_name
+        self.key = key
 
     def init(self, full_config: BaseModel, extra_config: dict, **kwargs) -> None:
         assert self.entity is not None, "wandb_entity must be specified for wandb logger"
@@ -126,7 +128,8 @@ class WandbLogger(BaseLogger):
                 print("You are renaming a run. I hope that is what you intended.")
             init_object['resume'] = 'must'
             init_object['id'] = self.run_id
-
+        if self.key:
+            self.wandb.login(key=self.key, relogin=True)
         self.wandb.init(**init_object)
         print(f"Logging to wandb run {self.wandb.run.path}-{self.wandb.run.name}")
 
